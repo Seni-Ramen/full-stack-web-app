@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, inject, signal, OnInit, Component } from '@angular/core';
+import { ChangeDetectionStrategy, inject, OnInit, Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Pokemon } from '../pokemon';
+import { Pokemon, PokemonRecord } from '../pokemon';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -12,6 +12,7 @@ import { Pokemon } from '../pokemon';
 export class PokemonForm implements OnInit {
   private formBuilder = inject(FormBuilder);
   pokemonService = inject(Pokemon);
+  editingPokemon = signal<PokemonRecord | null>(null);
 
   pokemonForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
@@ -27,16 +28,54 @@ export class PokemonForm implements OnInit {
   onSubmit() {
     if (this.pokemonForm.invalid) return;
 
-    const data = this.pokemonForm.getRawValue();
+    this.pokemonService.errorMessage.set(null);
+    const formValue = this.pokemonForm.getRawValue();
+    const data = { ...formValue, level: Number(formValue.level) };
+    const editingPokemon = this.editingPokemon();
+    const request = editingPokemon
+      ? this.pokemonService.updatePokemon(editingPokemon._id, data)
+      : this.pokemonService.savePokemon(data);
 
-    if(this.pokemonForm.valid) {  
-      this.pokemonService.savePokemon(data).subscribe({
-        next: () => {
-          this.pokemonService.fetchPokemon();
-          this.pokemonForm.reset();
-          console.log('Pokemon saved successfully');
-        }
-      })
-    }
+    request.subscribe({
+      next: () => {
+        this.pokemonForm.reset();
+        this.editingPokemon.set(null);
+        this.pokemonService.fetchPokemon();
+      },
+      error: () => {
+        this.pokemonService.errorMessage.set(
+          editingPokemon
+            ? 'Could not update this Pokémon. Please try again.'
+            : 'Could not save this Pokémon. Please try again.'
+        );
+      }
+    });
+  }
+
+  editPokemon(pokemon: PokemonRecord): void {
+    this.pokemonService.errorMessage.set(null);
+    this.editingPokemon.set(pokemon);
+    this.pokemonForm.patchValue({
+      name: pokemon.name,
+      type: pokemon.type,
+      level: String(pokemon.level),
+      nature: pokemon.nature
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingPokemon.set(null);
+    this.pokemonForm.reset();
+    this.pokemonService.errorMessage.set(null);
+  }
+
+  deletePokemon(pokemon: PokemonRecord): void {
+    this.pokemonService.errorMessage.set(null);
+    this.pokemonService.deletePokemon(pokemon._id).subscribe({
+      next: () => this.pokemonService.fetchPokemon(),
+      error: () => {
+        this.pokemonService.errorMessage.set('Could not remove this Pokémon. Please try again.');
+      }
+    });
   }
 }

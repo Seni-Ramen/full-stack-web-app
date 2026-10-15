@@ -182,10 +182,6 @@
   transform: translateY(2px);
 }
 
-.save-button span {
-  font-size: 1.25rem;
-}
-
 .team-panel {
   margin-bottom: 0;
 }
@@ -205,8 +201,13 @@
   list-style: none;
 }
 
+.pokemon-list > li {
+  list-style: none;
+}
+
 .pokemon-card {
-  padding: 1rem;
+  position: relative;
+  padding: 1rem 1rem 1rem 2.5rem;
   border: 1px solid var(--line);
   border-radius: 0.85rem;
   background: #fbfcfe;
@@ -241,11 +242,6 @@
 
 .pokemon-card p strong {
   color: var(--ink);
-}
-
-.detail-separator {
-  padding: 0 0.3rem;
-  color: #aab1be;
 }
 
 .empty-state {

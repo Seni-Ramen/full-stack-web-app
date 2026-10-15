@@ -2,9 +2,9 @@
   <header class="pokedex-header">
     <span class="pokeball-mark" aria-hidden="true"></span>
     <div>
-      <p class="eyebrow">TRAINER'S FIELD GUIDE</p>
-      <h1>Pokémon Registry</h1>
-      <p class="header-copy">A little home for your growing team.</p>
+      <p class="eyebrow">GARY OAK'S FIELD GUIDE</p>
+      <h1>Gary's Winning Team</h1>
+      <p class="header-copy">Gary's favorite Pokémon, all in one place.</p>
     </div>
     <span class="header-tag">TEAM DATABASE</span>
   </header>
@@ -13,7 +13,7 @@
     <div class="section-heading">
       <div>
         <p class="eyebrow">NEW DISCOVERY</p>
-        <h2 id="entry-title">Add a Pokémon</h2>
+        <h2 id="entry-title">{{ editingPokemon() ? 'Edit Pokémon' : 'Add a Pokémon' }}</h2>
       </div>
       <span class="section-index" aria-hidden="true">01</span>
     </div>
@@ -55,34 +55,45 @@
 
       <button class="save-button" type="submit" [disabled]="pokemonForm.invalid">
         <span aria-hidden="true">＋</span>
-        Save to team
+        {{ editingPokemon() ? 'Update Pokémon' : 'Save to team' }}
       </button>
+      @if (editingPokemon()) {
+        <button class="cancel-button" type="button" (click)="cancelEdit()">Cancel editing</button>
+      }
     </form>
   </section>
 
   <section class="team-panel" aria-labelledby="team-title">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">YOUR COLLECTION</p>
-        <h2 id="team-title">Saved Pokémon</h2>
+        <p class="eyebrow">GARY'S COLLECTION</p>
+        <h2 id="team-title">Gary's Winning Team</h2>
       </div>
       <span class="team-count">{{ pokemonService.pokemonList().length }} REGISTERED</span>
     </div>
 
+    @if (pokemonService.errorMessage(); as errorMessage) {
+      <p class="request-error" role="alert">{{ errorMessage }}</p>
+    }
+
     <ul class="pokemon-list">
-      @for (pokemon of pokemonService.pokemonList(); track pokemon.id) {
+      @for (pokemon of pokemonService.pokemonList(); track pokemon._id) {
         <li class="pokemon-card">
           <div class="pokemon-name-row">
             <strong>{{ pokemon.name }}</strong>
             <span class="type-tag">{{ pokemon.type }}</span>
           </div>
-          <p>Level <strong>{{ pokemon.level }}</strong><span class="detail-separator">·</span> {{ pokemon.nature }} nature</p>
+          <p>Level <strong>{{ pokemon.level }}</strong> · {{ pokemon.nature }} nature</p>
+          <div class="pokemon-actions">
+            <button type="button" class="edit-button" (click)="editPokemon(pokemon)" [attr.aria-label]="'Edit ' + pokemon.name">Edit</button>
+            <button type="button" class="delete-button" (click)="deletePokemon(pokemon)" [attr.aria-label]="'Remove ' + pokemon.name">Remove</button>
+          </div>
         </li>
       } @empty {
         <li class="empty-state">
           <span class="empty-ball" aria-hidden="true"></span>
-          <strong>Your team is waiting</strong>
-          <span>Add your first Pokémon using the form above.</span>
+          <strong>Gary's team is waiting</strong>
+          <span>Add a favorite Pokémon using the form above.</span>
         </li>
       }
     </ul>

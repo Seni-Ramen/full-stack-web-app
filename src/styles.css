@@ -3,3 +3,88 @@
 :root {
   color-scheme: light;
 }
+
+.pokedex .pokemon-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e8ebf1;
+}
+
+.pokedex .pokemon-actions button {
+  width: auto;
+  min-width: 4.5rem;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  box-shadow: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.pokedex .pokemon-actions .edit-button {
+  border-color: #d7e8f7;
+  background: #f0f7fd;
+  color: #28619a;
+}
+
+.pokedex .pokemon-actions .edit-button:hover {
+  border-color: #b8d8f5;
+  background: #e3f1fd;
+}
+
+.pokedex .pokemon-actions .delete-button {
+  border-color: #f2dfe0;
+  background: transparent;
+  color: #a94d55;
+}
+
+.pokedex .pokemon-actions .delete-button:hover {
+  border-color: #efc4c7;
+  background: #fff2f2;
+  color: #a72832;
+}
+
+.pokedex .pokemon-card {
+  position: relative;
+  padding-left: 2.25rem;
+}
+
+.pokedex .pokemon-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pokedex .pokemon-list > li {
+  margin: 0;
+}
+
+.pokedex .pokemon-card::before {
+  position: absolute;
+  top: 1.15rem;
+  left: 0.7rem;
+  width: 0.75rem;
+  aspect-ratio: 1;
+  border: 1px solid #252c3b;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #e84855 0 44%, #252c3b 44% 57%, #fff 57%);
+  content: "";
+}
+
+.pokedex .pokemon-card::after {
+  position: absolute;
+  top: 1.4rem;
+  left: 0.93rem;
+  width: 0.28rem;
+  aspect-ratio: 1;
+  border: 1px solid #252c3b;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+}
