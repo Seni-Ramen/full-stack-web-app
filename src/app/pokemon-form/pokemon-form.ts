@@ -70,6 +70,9 @@ export class PokemonForm implements OnInit {
   }
 
   deletePokemon(pokemon: PokemonRecord): void {
+    const confirmed = window.confirm(`Release ${pokemon.name} from Gary's team? This cannot be undone.`);
+    if (!confirmed) return;
+
     this.pokemonService.errorMessage.set(null);
     this.pokemonService.deletePokemon(pokemon._id).subscribe({
       next: () => this.pokemonService.fetchPokemon(),

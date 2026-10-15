@@ -86,7 +86,7 @@
           <p>Level <strong>{{ pokemon.level }}</strong> · {{ pokemon.nature }} nature</p>
           <div class="pokemon-actions">
             <button type="button" class="edit-button" (click)="editPokemon(pokemon)" [attr.aria-label]="'Edit ' + pokemon.name">Edit</button>
-            <button type="button" class="delete-button" (click)="deletePokemon(pokemon)" [attr.aria-label]="'Remove ' + pokemon.name">Remove</button>
+            <button type="button" class="delete-button" (click)="deletePokemon(pokemon)" [attr.aria-label]="'Release ' + pokemon.name">Release</button>
           </div>
         </li>
       } @empty {
