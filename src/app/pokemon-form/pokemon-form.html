@@ -1,0 +1,90 @@
+<main class="pokedex">
+  <header class="pokedex-header">
+    <span class="pokeball-mark" aria-hidden="true"></span>
+    <div>
+      <p class="eyebrow">TRAINER'S FIELD GUIDE</p>
+      <h1>Pokémon Registry</h1>
+      <p class="header-copy">A little home for your growing team.</p>
+    </div>
+    <span class="header-tag">TEAM DATABASE</span>
+  </header>
+
+  <section class="entry-panel" aria-labelledby="entry-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">NEW DISCOVERY</p>
+        <h2 id="entry-title">Add a Pokémon</h2>
+      </div>
+      <span class="section-index" aria-hidden="true">01</span>
+    </div>
+
+    <form [formGroup]="pokemonForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div>
+          <label for="name">Pokémon name</label>
+          <input id="name" type="text" formControlName="name" placeholder="e.g. Pikachu" />
+          @if (pokemonForm.controls.name.touched && pokemonForm.controls.name.hasError('required')) {
+            <small class="field-error" role="alert">Name is required.</small>
+          }
+        </div>
+
+        <div>
+          <label for="type">Type</label>
+          <input id="type" type="text" formControlName="type" placeholder="e.g. Electric" />
+          @if (pokemonForm.controls.type.touched && pokemonForm.controls.type.hasError('required')) {
+            <small class="field-error" role="alert">Type is required.</small>
+          }
+        </div>
+
+        <div>
+          <label for="level">Level</label>
+          <input id="level" type="number" formControlName="level" min="1" max="100" placeholder="1–100" />
+          @if (pokemonForm.controls.level.touched && pokemonForm.controls.level.invalid) {
+            <small class="field-error" role="alert">Level must be between 1 and 100.</small>
+          }
+        </div>
+
+        <div>
+          <label for="nature">Nature</label>
+          <input id="nature" type="text" formControlName="nature" placeholder="e.g. Jolly" />
+          @if (pokemonForm.controls.nature.touched && pokemonForm.controls.nature.hasError('required')) {
+            <small class="field-error" role="alert">Nature is required.</small>
+          }
+        </div>
+      </div>
+
+      <button class="save-button" type="submit" [disabled]="pokemonForm.invalid">
+        <span aria-hidden="true">＋</span>
+        Save to team
+      </button>
+    </form>
+  </section>
+
+  <section class="team-panel" aria-labelledby="team-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">YOUR COLLECTION</p>
+        <h2 id="team-title">Saved Pokémon</h2>
+      </div>
+      <span class="team-count">{{ pokemonService.pokemonList().length }} REGISTERED</span>
+    </div>
+
+    <ul class="pokemon-list">
+      @for (pokemon of pokemonService.pokemonList(); track pokemon.id) {
+        <li class="pokemon-card">
+          <div class="pokemon-name-row">
+            <strong>{{ pokemon.name }}</strong>
+            <span class="type-tag">{{ pokemon.type }}</span>
+          </div>
+          <p>Level <strong>{{ pokemon.level }}</strong><span class="detail-separator">·</span> {{ pokemon.nature }} nature</p>
+        </li>
+      } @empty {
+        <li class="empty-state">
+          <span class="empty-ball" aria-hidden="true"></span>
+          <strong>Your team is waiting</strong>
+          <span>Add your first Pokémon using the form above.</span>
+        </li>
+      }
+    </ul>
+  </section>
+</main>
